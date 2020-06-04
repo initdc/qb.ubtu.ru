@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
@@ -20,8 +19,6 @@ func main() {
 
 	router.GET("/", func(c *gin.Context) {
 		ua := c.Request.Header.Get("User-Agent")
-		fmt.Println("ua: ", ua)
-		fmt.Println("lenth: ", len(ua))
 		if strings.Contains(ua, "like Gecko") {
 			c.HTML(http.StatusOK, "index.html", gin.H{
 				"sh": string(d),
@@ -29,7 +26,6 @@ func main() {
 		} else {
 			c.File("sh/1key-docker-compose-ubuntu.sh")
 		}
-
 	})
 
 	router.Run(":80")
