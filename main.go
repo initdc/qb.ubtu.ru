@@ -1,33 +1,35 @@
 package main
 
 import (
-	_ "fmt"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
 func main() {
-	dat, _ := ioutil.ReadFile("sh/1key-docker-compose-ubuntu.sh")
+	d, err := ioutil.ReadFile("sh/1key-docker-compose-ubuntu.sh")
+	if err != nil {
+		panic(err)
+	}
 
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.LoadHTMLGlob("templates/index.html")
 
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"sh": string(dat),
-		})
-	})
+		ua := c.Request.Header.Get("User-Agent")
+		fmt.Println("ua: ", ua)
+		fmt.Println("lenth: ", len(ua))
+		if strings.Contains(ua, "like Gecko") {
+			c.HTML(http.StatusOK, "index.html", gin.H{
+				"sh": string(d),
+			})
+		} else {
+			c.File("sh/1key-docker-compose-ubuntu.sh")
+		}
 
-	router.HEAD("/", func(d *gin.Context) {
-		d.File("sh/1key-docker-compose-ubuntu.sh")
 	})
 
 	router.Run(":80")
