@@ -3,7 +3,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 )
 
@@ -11,6 +13,12 @@ func main() {
 	d, err := ioutil.ReadFile("sh/1key-docker-compose-ubuntu.sh")
 	if err != nil {
 		panic(err)
+	}
+
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		log.Fatal("$PORT must be set")
 	}
 
 	router := gin.New()
@@ -28,5 +36,5 @@ func main() {
 		}
 	})
 
-	router.Run(":80")
+	router.Run(":" + port)
 }
