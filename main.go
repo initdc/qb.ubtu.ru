@@ -27,7 +27,7 @@ func main() {
 
 	router.GET("/", func(c *gin.Context) {
 		ua := c.Request.Header.Get("User-Agent")
-		if strings.Contains(ua, "like Gecko") {
+		if strings.Contains(ua, "Gecko") {
 			c.HTML(http.StatusOK, "index.html", gin.H{
 				"sh": string(d),
 			})
