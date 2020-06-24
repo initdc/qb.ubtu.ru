@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"log"
@@ -11,6 +12,7 @@ import (
 
 func main() {
 	ins, err := ioutil.ReadFile("sh/install.sh")
+	rc, err := ioutil.ReadFile("sh/.zshrc")
 	if err != nil {
 		panic(err)
 	}
@@ -38,10 +40,7 @@ func main() {
 
 	router.GET("/rc", func(d *gin.Context) {
 		d.File("sh/.zshrc")
-	})
-
-	router.GET("/favicon.ico", func(e *gin.Context) {
-		e.File("favicon.ico")
+		fmt.Println(string(rc))
 	})
 
 	router.Run(":" + port)
