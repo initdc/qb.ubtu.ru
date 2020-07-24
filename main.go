@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	ins, err := ioutil.ReadFile("sh/install.sh")
+	ins, err := ioutil.ReadFile("./sh/install.sh")
 	if err != nil {
 		panic(err)
 	}
@@ -25,6 +25,8 @@ func main() {
 	router.Use(gin.Logger())
 	router.LoadHTMLGlob("templates/index.html")
 
+	router.StaticFile("/favicon.ico", "./favicon.png")
+
 	router.GET("/", func(c *gin.Context) {
 		ua := c.Request.Header.Get("User-Agent")
 		if strings.Contains(ua, "Gecko") {
@@ -32,16 +34,8 @@ func main() {
 				"sh": string(ins),
 			})
 		} else {
-			c.File("sh/install.sh")
+			c.File("./sh/install.sh")
 		}
-	})
-
-	router.GET("/rc", func(d *gin.Context) {
-		d.File("sh/.zshrc")
-	})
-
-	router.GET("/favicon.ico", func(e *gin.Context) {
-		e.File("favicon.ico")
 	})
 
 	router.Run(":" + port)
